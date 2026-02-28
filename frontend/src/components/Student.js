@@ -19,27 +19,46 @@ export default function Student() {
     const[students,setStudents]=useState([])
      const classes = useStyles();
 
-  const handleClick=(e)=>{
-    e.preventDefault()
-    const student={name,address}
-    console.log(student)
-    fetch("http://localhost:8080/student/add",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify(student)
+  const loadStudents = () => {
+    fetch("http://localhost:8080/student/getAll")
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to load students");
+        }
+        return res.json();
+      })
+      .then((result) => {
+        setStudents(result);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
-  }).then(()=>{
-    console.log("New Student added")
-  })
-}
+  const handleClick = (e) => {
+    e.preventDefault();
+
+    const student = { name, address };
+    fetch("http://localhost:8080/student/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(student),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to add student");
+        }
+        setName("");
+        setAddress("");
+        loadStudents();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
 useEffect(()=>{
-  fetch("http://localhost:8080/student/getAll")
-  .then(res=>res.json())
-  .then((result)=>{
-    setStudents(result);
-  }
-)
+  loadStudents();
 },[])
   return (
 
