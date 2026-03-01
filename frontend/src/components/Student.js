@@ -20,7 +20,7 @@ export default function Student() {
      const classes = useStyles();
 
   const loadStudents = () => {
-    fetch("http://localhost:8080/student/getAll")
+    fetch("/api/student/getAll")
       .then((res) => {
         if (!res.ok) {
           throw new Error("Failed to load students");
@@ -39,7 +39,7 @@ export default function Student() {
     e.preventDefault();
 
     const student = { name, address };
-    fetch("http://localhost:8080/student/add", {
+    fetch("/api/student/add", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(student),
